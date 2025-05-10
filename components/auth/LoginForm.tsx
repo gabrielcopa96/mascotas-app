@@ -28,7 +28,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
     <IconRegistry
       name={showPassword ? 'eye-off' : 'eye'}
       size={20}
-      color={COLORS.primary.light}
+      color={COLORS.primary.dark}
     />
   );
 
@@ -36,21 +36,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
     <View style={styles.container}>
       <Input
         label="Email o dni"
-        placeholder="Ingresa tu email o dni"
+        placeholder="Ingresá tu email o dni"
         value={values.email}
         onChangeText={(text) => handleChange('email', text)}
         error={errors.email}
         touched={touched.email}
         keyboardType="email-address"
         autoCapitalize="none"
-        icon={<IconRegistry name="email" size={20} color={COLORS.primary.light} />}
-        iconPosition="left"
         onBlur={() => handleBlur('email')}
       />
 
       <Input
         label="Contraseña"
-        placeholder="Ingresa tu contraseña"
+        placeholder="Ingresá tu contraseña"
         value={values.password}
         onChangeText={(text) => handleChange('password', text)}
         secureTextEntry={!showPassword}
@@ -63,7 +61,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
       />
 
       <Button
-        title="Iniciar sesion"
+        title="Iniciar sesión"
         onPress={handleSubmit}
         loading={isLoading}
         fullWidth

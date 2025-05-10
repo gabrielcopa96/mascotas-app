@@ -86,16 +86,16 @@ export const SIZES = {
 
 export const FONTS = {
   regular: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Outfit_400Regular',
   },
   medium: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Outfit_500Medium',
   },
   semiBold: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   bold: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Outfit_700Bold',
   },
 };
 

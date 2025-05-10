@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
-import { Typography, Logo, GradientBackground, Divider } from '../../components/ui';
+import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert, Image } from 'react-native';
+import { Typography, GradientBackground, Divider } from '../../components/ui';
 import { COLORS, SIZES } from '../../constants/theme';
 import { navigateToHome, navigateToRegister } from '../../utils/navigation';
 import LoginForm from '../../components/auth/LoginForm';
@@ -58,18 +58,22 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.logoContainer}>
-            <Logo size="large" />
+            <Image 
+              source={require('../../assets/images/logo.png')} 
+              style={styles.logo} 
+              resizeMode="contain"
+            />
           </View>
 
-          <View style={styles.formContainer}>
-            <Typography variant="h3" color={COLORS.white} align="center" style={styles.title}>
-              Inicia sesion
+          <View style={styles.cardContainer}>
+            <Typography variant="h1" color={COLORS.text.primary} align="center" style={styles.title}>
+              Inicia sesión
             </Typography>
 
             {/* Formulario de login */}
             <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
 
-            <Divider text="ó" color={COLORS.border.light} style={styles.divider} />
+            <Divider text="ó" color={COLORS.border.dark} style={styles.divider} />
 
             {/* Botón de login con Google */}
             <GoogleLoginButton onPress={handleGoogleLogin} isLoading={isLoading} />
@@ -96,11 +100,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SIZES.spacing.xl,
   },
-  formContainer: {
+  logo: {
+    width: 210,
+    height: 210,
+  },
+  cardContainer: {
     width: '100%',
+    backgroundColor: COLORS.white,
+    borderRadius: SIZES.borderRadius.lg,
+    padding: SIZES.spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
     marginBottom: SIZES.spacing.xl,
+    letterSpacing: 1,
   },
   divider: {
     marginVertical: SIZES.spacing.lg,
