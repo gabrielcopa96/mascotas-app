@@ -4,19 +4,19 @@ import { Typography, Link } from '../ui';
 import IconRegistry from '../icons/IconRegistry';
 import { COLORS, SIZES } from '../../constants/theme';
 
-interface RegisterLinkProps {
+interface LoginLinkProps {
   onPress: () => void;
 }
 
-const RegisterLink: React.FC<RegisterLinkProps> = ({ onPress }) => {
+const LoginLink: React.FC<LoginLinkProps> = ({ onPress }) => {
   return (
     <View style={styles.container}>
       <Typography variant="body1" color={COLORS.text.primary}>
-        ¿No tenes una cuenta?
+        ¿Ya tenes una cuenta?
       </Typography>
       <View style={styles.linkContainer}>
         <Link
-          title="Unite y gestiona el cuidado de tu mascota"
+          title="Inicia sesión"
           onPress={onPress}
           color={COLORS.primary.light}
           icon={<IconRegistry name="paw" size={16} color={COLORS.primary.light} />}
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterLink;
+export default LoginLink;

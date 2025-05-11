@@ -14,9 +14,9 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
 }) => {
   return (
     <Button
-      title="Iniciar sesion con Google"
+      title="Iniciar sesión con Google"
       onPress={onPress}
-      variant="tertiary"
+      variant="google"
       fullWidth
       loading={isLoading}
       icon={<IconRegistry name="google" size={20} />}

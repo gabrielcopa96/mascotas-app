@@ -13,7 +13,7 @@ import { COLORS, SIZES, FONTS } from '../../constants/theme';
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'tertiary';
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'google';
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
   loading?: boolean;
@@ -55,6 +55,11 @@ const Button: React.FC<ButtonProps> = ({
           backgroundColor: COLORS.button.tertiary,
           borderColor: COLORS.button.tertiary,
         };
+      case 'google':
+        return {
+          backgroundColor: COLORS.white,
+          borderColor: COLORS.primary.dark,
+        };
       default:
         return {
           backgroundColor: COLORS.button.primary,
@@ -74,6 +79,10 @@ const Button: React.FC<ButtonProps> = ({
       case 'tertiary':
         return {
           color: COLORS.primary.light,
+        };
+      case 'google':
+        return {
+          color: COLORS.primary.dark,
         };
       default:
         return {
@@ -167,19 +176,26 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       activeOpacity={0.7}
     >
-      {loading ? (
-        <ActivityIndicator size="small" color={getLoaderColor()} />
-      ) : (
-        <View style={styles.contentContainer}>
-          {icon && iconPosition === 'left' && (
-            <View style={styles.iconLeft}>{icon}</View>
-          )}
-          <Text style={textStyles}>{title}</Text>
-          {icon && iconPosition === 'right' && (
-            <View style={styles.iconRight}>{icon}</View>
-          )}
-        </View>
-      )}
+      <View style={styles.contentContainer}>
+        {loading && (
+          <ActivityIndicator 
+            size="small" 
+            color={getLoaderColor()} 
+            style={styles.loader} 
+          />
+        )}
+        {(!loading || variant === 'google') && (
+          <>
+            {icon && iconPosition === 'left' && (
+              <View style={styles.iconLeft}>{icon}</View>
+            )}
+            <Text style={[textStyles, loading && styles.fadedText]}>{title}</Text>
+            {icon && iconPosition === 'right' && (
+              <View style={styles.iconRight}>{icon}</View>
+            )}
+          </>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -201,10 +217,17 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     textAlign: 'center',
   },
+  fadedText: {
+    opacity: 0.7,
+  },
   contentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+  },
+  loader: {
+    marginRight: SIZES.spacing.xs,
   },
   iconLeft: {
     marginRight: SIZES.spacing.xs,

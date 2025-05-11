@@ -85,9 +85,7 @@ const Input: React.FC<InputProps> = ({
     if (error && touched) {
       return COLORS.status.error;
     }
-    if (isFocused) {
-      return COLORS.primary.light;
-    }
+    // Ya no cambiamos el color al enfocar
     return COLORS.border.main;
   };
 
@@ -162,7 +160,7 @@ const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: SIZES.spacing.md,
+    marginBottom: SIZES.spacing.sm, // Reducido de md a sm
     width: '100%',
   },
   labelContainer: {
@@ -181,8 +179,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: SIZES.borderRadius.md,
-    height: 56,
-    overflow: 'hidden',
+    height: 50, // Reducido de 56 a 50
+    // Eliminamos overflow: 'hidden' para que el borde no se corte
   },
   input: {
     flex: 1,
@@ -203,9 +201,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     ...FONTS.regular,
-    fontSize: SIZES.sm,
+    fontSize: 10, // Reducimos el tamaño de la fuente
     color: COLORS.status.error,
-    marginTop: SIZES.spacing.xs,
+    marginTop: 2, // Reducimos el margen superior
+    marginBottom: 0, // Eliminamos cualquier margen inferior
   },
 });
 

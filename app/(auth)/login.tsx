@@ -6,15 +6,18 @@ import { navigateToHome, navigateToRegister } from '../../utils/navigation';
 import LoginForm from '../../components/auth/LoginForm';
 import GoogleLoginButton from '../../components/auth/GoogleLoginButton';
 import RegisterLink from '../../components/auth/RegisterLink';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import { LoginCredentials } from '../../services/authService';
 
 export default function LoginScreen() {
-  const { login, loginWithGoogle, isLoading, error } = useAuth();
+  const { login, loginWithGoogle, error } = useAuth();
+  const [isLoginLoading, setIsLoginLoading] = React.useState(false);
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = React.useState(false);
 
   // Manejar inicio de sesión
   const handleLogin = async (credentials: LoginCredentials) => {
     try {
+      setIsLoginLoading(true);
       await login(credentials);
       // Navegar al dashboard después de iniciar sesión
       navigateToHome();
@@ -22,18 +25,23 @@ export default function LoginScreen() {
       // El error ya está manejado en el hook useAuth
       // Pero podríamos mostrar un mensaje adicional si es necesario
       Alert.alert('Error de inicio de sesión', error || 'No se pudo iniciar sesión');
+    } finally {
+      setIsLoginLoading(false);
     }
   };
 
   // Manejar inicio de sesión con Google
   const handleGoogleLogin = async () => {
     try {
+      setIsGoogleLoginLoading(true);
       await loginWithGoogle();
       // Navegar al dashboard después de iniciar sesión
       navigateToHome();
     } catch (err) {
       // El error ya está manejado en el hook useAuth
       Alert.alert('Error de inicio de sesión', error || 'No se pudo iniciar sesión con Google');
+    } finally {
+      setIsGoogleLoginLoading(false);
     }
   };
 
@@ -66,17 +74,17 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.cardContainer}>
-            <Typography variant="h1" color={COLORS.text.primary} align="center" style={styles.title}>
+            <Typography variant="h2" color={COLORS.text.primary} align="center" style={styles.title}>
               Inicia sesión
             </Typography>
 
             {/* Formulario de login */}
-            <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+            <LoginForm onSubmit={handleLogin} isLoading={isLoginLoading} />
 
             <Divider text="ó" color={COLORS.border.dark} style={styles.divider} />
 
             {/* Botón de login con Google */}
-            <GoogleLoginButton onPress={handleGoogleLogin} isLoading={isLoading} />
+            <GoogleLoginButton onPress={handleGoogleLogin} isLoading={isGoogleLoginLoading} />
 
             {/* Enlace para registrarse */}
             <RegisterLink onPress={handleRegisterPress} />
@@ -101,8 +109,8 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.spacing.xl,
   },
   logo: {
-    width: 210,
-    height: 210,
+    width: 120,
+    height: 120,
   },
   cardContainer: {
     width: '100%',

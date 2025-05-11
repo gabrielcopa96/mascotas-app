@@ -1,49 +1,41 @@
 import { useState, useCallback } from 'react';
 
-interface LoginFormValues {
+interface ForgotPasswordFormValues {
   email: string;
-  password: string;
 }
 
-interface LoginFormErrors {
+interface ForgotPasswordFormErrors {
   email: string;
-  password: string;
 }
 
-interface UseLoginFormReturn {
-  values: LoginFormValues;
-  errors: LoginFormErrors;
-  touched: Record<keyof LoginFormValues, boolean>;
-  showPassword: boolean;
+interface UseForgotPasswordFormReturn {
+  values: ForgotPasswordFormValues;
+  errors: ForgotPasswordFormErrors;
+  touched: Record<keyof ForgotPasswordFormValues, boolean>;
   isSubmitting: boolean;
-  handleChange: (field: keyof LoginFormValues, value: string) => void;
-  handleBlur: (field: keyof LoginFormValues) => void;
-  togglePasswordVisibility: () => void;
+  handleChange: (field: keyof ForgotPasswordFormValues, value: string) => void;
+  handleBlur: (field: keyof ForgotPasswordFormValues) => void;
   handleSubmit: () => Promise<void>;
   isValid: boolean;
 }
 
-const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): UseLoginFormReturn => {
+const useForgotPasswordForm = (
+  onSubmit: (values: ForgotPasswordFormValues) => Promise<void>
+): UseForgotPasswordFormReturn => {
   // Estado para los valores del formulario
-  const [values, setValues] = useState<LoginFormValues>({
+  const [values, setValues] = useState<ForgotPasswordFormValues>({
     email: '',
-    password: '',
   });
 
   // Estado para los errores del formulario
-  const [errors, setErrors] = useState<LoginFormErrors>({
+  const [errors, setErrors] = useState<ForgotPasswordFormErrors>({
     email: '',
-    password: '',
   });
 
   // Estado para los campos que han sido tocados
-  const [touched, setTouched] = useState<Record<keyof LoginFormValues, boolean>>({
+  const [touched, setTouched] = useState<Record<keyof ForgotPasswordFormValues, boolean>>({
     email: false,
-    password: false,
   });
-
-  // Estado para mostrar/ocultar la contraseña
-  const [showPassword, setShowPassword] = useState(false);
 
   // Estado para el envío del formulario
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,47 +64,19 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
     return '';
   }, []);
 
-  // Validación de contraseña
-  const validatePassword = useCallback((password: string): string => {
-    if (!password) {
-      return 'La contraseña es requerida';
-    }
-
-    if (password.length < 6) {
-      return 'La contraseña debe tener al menos 6 caracteres';
-    }
-
-    // Validación opcional para contraseñas más seguras
-    // Descomentar si se requiere una validación más estricta
-    /*
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
-    if (!(hasUpperCase && hasLowerCase && hasNumbers)) {
-      return 'La contraseña debe incluir mayúsculas, minúsculas y números';
-    }
-    */
-
-    return '';
-  }, []);
-
   // Validación de todo el formulario
   const validateForm = useCallback((): boolean => {
     const emailError = validateEmail(values.email);
-    const passwordError = validatePassword(values.password);
 
     setErrors({
       email: emailError,
-      password: passwordError,
     });
 
-    return !emailError && !passwordError;
-  }, [values, validateEmail, validatePassword]);
+    return !emailError;
+  }, [values, validateEmail]);
 
   // Manejador de cambio de valores
-  const handleChange = useCallback((field: keyof LoginFormValues, value: string) => {
+  const handleChange = useCallback((field: keyof ForgotPasswordFormValues, value: string) => {
     setValues((prevValues) => ({
       ...prevValues,
       [field]: value,
@@ -124,8 +88,6 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
       
       if (field === 'email') {
         fieldError = validateEmail(value);
-      } else if (field === 'password') {
-        fieldError = validatePassword(value);
       }
 
       setErrors((prevErrors) => ({
@@ -133,10 +95,10 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
         [field]: fieldError,
       }));
     }
-  }, [touched, validateEmail, validatePassword]);
+  }, [touched, validateEmail]);
 
   // Manejador de blur (cuando el campo pierde el foco)
-  const handleBlur = useCallback((field: keyof LoginFormValues) => {
+  const handleBlur = useCallback((field: keyof ForgotPasswordFormValues) => {
     setTouched((prevTouched) => ({
       ...prevTouched,
       [field]: true,
@@ -147,27 +109,19 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
     
     if (field === 'email') {
       fieldError = validateEmail(values.email);
-    } else if (field === 'password') {
-      fieldError = validatePassword(values.password);
     }
 
     setErrors((prevErrors) => ({
       ...prevErrors,
       [field]: fieldError,
     }));
-  }, [values, validateEmail, validatePassword]);
-
-  // Alternar visibilidad de la contraseña
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  }, []);
+  }, [values, validateEmail]);
 
   // Manejador de envío del formulario
   const handleSubmit = useCallback(async () => {
     // Marcar todos los campos como tocados
     setTouched({
       email: true,
-      password: true,
     });
 
     // Validar el formulario
@@ -176,13 +130,7 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
     if (isValid) {
       setIsSubmitting(true);
       try {
-        // Preparar las credenciales para la API
-        const credentials = {
-          email: values.email,
-          password: values.password
-        };
-        
-        await onSubmit(credentials);
+        await onSubmit(values);
       } catch (error) {
         console.error('Error en el envío del formulario:', error);
       } finally {
@@ -192,20 +140,18 @@ const useLoginForm = (onSubmit: (values: LoginFormValues) => Promise<void>): Use
   }, [values, validateForm, onSubmit]);
 
   // Verificar si el formulario es válido
-  const isValid = !errors.email && !errors.password && values.email !== '' && values.password !== '';
+  const isValid = !errors.email && values.email !== '';
 
   return {
     values,
     errors,
     touched,
-    showPassword,
     isSubmitting,
     handleChange,
     handleBlur,
-    togglePasswordVisibility,
     handleSubmit,
     isValid,
   };
 };
 
-export default useLoginForm;
+export default useForgotPasswordForm;

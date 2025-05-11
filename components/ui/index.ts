@@ -6,3 +6,4 @@ export { default as Logo } from './Logo';
 export { default as GradientBackground } from './GradientBackground';
 export { default as Card } from './Card';
 export { default as Divider } from './Divider';
+export { default as Checkbox } from './Checkbox';

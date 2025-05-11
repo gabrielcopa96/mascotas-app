@@ -15,6 +15,7 @@ import {
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { COLORS } from '@/constants/theme';
+import { AuthProvider } from '../contexts/AuthContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -41,18 +42,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="light" />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="light" />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
-// Redirect to the auth screen
-export function Index() {
-  return <Redirect href="/(auth)/login" />;
-}
+// Esta función ya no es necesaria ya que tenemos un archivo index.tsx específico
+// que maneja la redirección basada en el estado de autenticación

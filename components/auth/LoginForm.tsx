@@ -1,17 +1,23 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Input } from '../ui';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button, Input, Typography } from '../ui';
 import IconRegistry from '../icons/IconRegistry';
 import { COLORS, SIZES } from '../../constants/theme';
 import useLoginForm from '../../hooks/forms/useLoginForm';
 import { LoginCredentials } from '../../services/authService';
+import { navigateTo } from '../../utils/navigation';
 
 interface LoginFormProps {
   onSubmit: (credentials: LoginCredentials) => Promise<void>;
   isLoading?: boolean;
+  onForgotPassword?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ 
+  onSubmit, 
+  isLoading = false,
+  onForgotPassword = () => navigateTo('/forgot-password')
+}) => {
   const {
     values,
     errors,
@@ -60,6 +66,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
         onBlur={() => handleBlur('password')}
       />
 
+      <TouchableOpacity 
+        style={styles.forgotPasswordContainer} 
+        onPress={onForgotPassword}
+      >
+        <Typography 
+          variant="body2" 
+          color={COLORS.primary.light}
+        >
+          ¿Olvidaste tu contraseña?
+        </Typography>
+      </TouchableOpacity>
+
       <Button
         title="Iniciar sesión"
         onPress={handleSubmit}
@@ -77,8 +95,13 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  forgotPasswordContainer: {
+    alignSelf: 'flex-end',
+    marginTop: SIZES.spacing.xs,
+    marginBottom: SIZES.spacing.sm,
+  },
   loginButton: {
-    marginTop: SIZES.spacing.md,
+    marginTop: SIZES.spacing.sm,
   },
 });
 
